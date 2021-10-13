@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "hexlet-code"
+version = "0.1.0"
+description = "This is a page loader - a program that downloads a page from the network and puts it in the specified existing directory."
+authors = ["Artem Nechai <lenikol95@mail.ru>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
