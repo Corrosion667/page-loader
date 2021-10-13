@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "This is a page loader - a program that downloads a page from the network and puts it in the specified existing directory."
 authors = ["Artem Nechai <lenikol95@mail.ru>"]
 packages = [
-  { include = "page-loader" },
+  { include = "page_loader" },
 ]
 
 [tool.poetry.dependencies]
