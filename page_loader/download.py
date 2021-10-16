@@ -8,5 +8,4 @@ def download(url, directory):
         url: url.
         directory: directory.
     """
-
     pass  # noqa: WPS420
