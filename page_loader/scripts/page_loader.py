@@ -18,7 +18,7 @@ def main():
     parser.add_argument('url', type=str)
     args = parser.parse_args()
     print(
-        download(args.output, args.url),
+        download(args.url, args.output),
     )
 
 
