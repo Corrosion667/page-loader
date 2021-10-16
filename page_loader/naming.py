@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 
 
 def get_name(url):
-    """Get name for dounloads depending on the URL of page.
+    """Get name for downloads depending on the URL of page.
 
     Args:
         url: ULR of the web page.
@@ -14,7 +14,7 @@ def get_name(url):
         Generated name for files.
     """
     prefix = urlparse(url).scheme
-    name = re.sub(r'^{0}...'.format(prefix), '', url)
+    body = re.sub(r'^{0}...'.format(prefix), '', url)
     return '{0}.html'.format(
-        re.sub(r'[^a-zA-Z0-9]', '-', name),
+        re.sub(r'[^a-zA-Z0-9]', '-', body),
     )
