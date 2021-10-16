@@ -1,5 +1,10 @@
 """Module to download web pages via their URLs."""
 
+import os
+
+import requests
+from page_loader.naming import get_name
+
 
 def download(url, directory):
     """Docstring.
@@ -8,4 +13,7 @@ def download(url, directory):
         url: url.
         directory: directory.
     """
-    pass  # noqa: WPS420
+    response = requests.get(url)
+    file_name = get_name(url)
+    with open(os.path.join(directory, file_name), 'w') as new_file:
+        new_file.write(response.text)
