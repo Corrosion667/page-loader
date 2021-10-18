@@ -12,7 +12,7 @@ def test_get_name():
     """Test for checking naming parsing of web page URL."""
     assert get_name(
         'https://ru.hexlet.io/courses',
-    ) == 'ru-hexlet-io-courses.html'
+    ) == 'ru-hexlet-io-courses'
 
 
 def test_download(requests_mock, tmp_path):
@@ -24,6 +24,7 @@ def test_download(requests_mock, tmp_path):
     """
     requests_mock.get(TEST_URL, text='data')
     download(TEST_URL, tmp_path)
-    with open(os.path.join(tmp_path, get_name(TEST_URL))) as test_file:
+    file_name = '{0}.html'.format(get_name(TEST_URL))
+    with open(os.path.join(tmp_path, file_name)) as test_file:
         test_content = test_file.read()
         assert test_content == 'data'
