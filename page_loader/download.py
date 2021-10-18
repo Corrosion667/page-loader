@@ -5,15 +5,22 @@ import os
 import requests
 from page_loader.naming import get_name
 
+default_path = os.getcwd()
 
-def download(url, directory):
+
+def download(url, directory=default_path):
     """Docstring.
 
     Args:
         url: url.
         directory: directory.
+
+    Returns:
+        Full path of download including file name.
     """
     response = requests.get(url)
     file_name = get_name(url)
-    with open(os.path.join(directory, file_name), 'w') as new_file:
+    download_path = os.path.join(directory, file_name)
+    with open(download_path, 'w') as new_file:
         new_file.write(response.text)
+    return download_path
