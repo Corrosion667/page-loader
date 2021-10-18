@@ -2,7 +2,7 @@
 """This program downloads a page from the network."""
 import argparse
 
-from page_loader.download import download
+from page_loader.download import DEFAULT_PATH, download
 
 SUCCESS = "Page was successfully downloaded into '{0}'"
 
@@ -14,7 +14,7 @@ def main():
         '-o',
         '--output',
         type=str,
-        default='"/app"',
+        default=DEFAULT_PATH,
         help='select folder where to download the page',
     )
     parser.add_argument('url', type=str)
