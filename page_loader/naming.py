@@ -15,6 +15,4 @@ def get_name(url):
     """
     prefix = urlparse(url).scheme
     body = re.sub(r'^{0}...'.format(prefix), '', url)
-    return '{0}.html'.format(
-        re.sub(r'[^a-zA-Z0-9]', '-', body),
-    )
+    return re.sub(r'[^a-zA-Z0-9]', '-', body)
