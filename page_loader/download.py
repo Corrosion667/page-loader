@@ -21,6 +21,6 @@ def download(url, directory=default_path):
     response = requests.get(url)
     file_name = '{0}.html'.format(get_name(url))
     download_path = os.path.join(directory, file_name)
-    with open(download_path, 'wb') as new_file:
-        new_file.write(response.content)
+    with open(download_path, 'w') as new_file:
+        new_file.write(response.text)
     return download_path
