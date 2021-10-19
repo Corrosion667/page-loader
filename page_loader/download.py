@@ -9,11 +9,11 @@ default_path = os.getcwd()
 
 
 def download(url, directory=default_path):
-    """Docstring.
+    """Download web page to the selected directory.
 
     Args:
-        url: url.
-        directory: directory.
+        url: url of the web page.
+        directory: directory where to download the page.
 
     Returns:
         Full path of download including file name.
