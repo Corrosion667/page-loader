@@ -3,16 +3,16 @@
 import os
 
 from page_loader.download import download
-from page_loader.naming import get_name
+from page_loader.naming import html_name
 
 TEST_URL = 'https://ru.hexlet.io/courses'
 
 
-def test_get_name():
+def test_html_name():
     """Test for checking naming parsing of web page URL."""
-    assert get_name(
+    assert html_name(
         'https://ru.hexlet.io/courses',
-    ) == 'ru-hexlet-io-courses'
+    ) == 'ru-hexlet-io-courses.html'
 
 
 def test_download(requests_mock, tmp_path):
@@ -24,7 +24,7 @@ def test_download(requests_mock, tmp_path):
     """
     requests_mock.get(TEST_URL, text='data')
     download(TEST_URL, tmp_path)
-    file_name = '{0}.html'.format(get_name(TEST_URL))
+    file_name = html_name(TEST_URL)
     with open(os.path.join(tmp_path, file_name)) as test_file:
         test_content = test_file.read()
         assert test_content == 'data'
