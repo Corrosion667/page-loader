@@ -28,3 +28,15 @@ def html_name(url):
         Generated name for html file.
     """
     return '{0}.html'.format(get_name(url))
+
+
+def folder_name(url):
+    """Get name for folder to download resources depending on the URL of page.
+
+    Args:
+        url: URL of the web page.
+
+    Returns:
+        Generated name for downloads directory.
+    """
+    return '{0}_files'.format(get_name(url))
