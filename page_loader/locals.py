@@ -1,9 +1,11 @@
 """Module for working with web images."""
 
+import os
 from urllib.parse import urlparse
 
 import requests
 from bs4 import BeautifulSoup
+from page_loader.naming import folder_name
 
 
 def is_local(src, url):
@@ -33,3 +35,10 @@ def get_images_links(url):
     soup = BeautifulSoup(response.text, 'html.parser')
     img_tags = soup.find_all('img')
     return [img['src'] for img in img_tags if is_local(img['src'], url)]
+
+
+def download_images(url, directory):
+    os.mkdir(os.path.join(directory, folder_name(url)))
+    links = get_images_links(url)
+    for link in links:
+        pass
