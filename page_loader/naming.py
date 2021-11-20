@@ -43,12 +43,12 @@ def folder_name(url):
     return '{0}_files'.format(get_name(url))
 
 
-def locals_path(url, link):
+def locals_path(link, url):
     """Get full path with folder and name for local file.
 
     Args:
-        url: URL of the web page.
         link: src or href for the resource.
+        url: URL of the web page.
 
     Returns:
         Generated path for file.
