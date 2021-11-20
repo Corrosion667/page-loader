@@ -2,11 +2,12 @@
 
 from urllib.parse import urlparse
 
-import requests
 from bs4 import BeautifulSoup
-from page_loader.naming import locals_name
+from page_loader.naming import locals_path
 
 LOCALS = ('img', 'link', 'script')
+source = 'src'
+hyperlink = 'href'
 
 
 def is_local(src, url):
@@ -23,41 +24,38 @@ def is_local(src, url):
     return urlparse(src).netloc in {domain, ''}
 
 
-def get_locals(url):
-    """Get list of tuples: local resources and file names for them to be downloaded.
-
-    Args:
-        url: url of the web page to be parsed.
-
-    Returns:
-        List of locally stored resources and names for files to download.
-    """
-    soup = BeautifulSoup(requests.get(url).text, 'html.parser')
-    urls = []
-    for each in LOCALS:
-        for link in soup.find_all(each):
-            if each != 'link':
-                try:
-                    if is_local(link['src'], url):
-                        urls.append(
-                            (link['src'], locals_name(link['src'], url)),
-                        )
-                except KeyError:
-                    continue
-            try:
-                if is_local(link['href'], url):
-                    urls.append(
-                        (link['href'], locals_name(link['href'], url)),
-                    )
-            except KeyError:
-                continue
-    return urls
-
-
-def replace_locals(path_to_html, urls):
+def get_and_replace_locals(path_to_html, url):
     """Replace links in downloaded html page from web links to local files.
+
+    Get list of tuples: links with local resources and file paths for downloads.
 
     Args:
         path_to_html: dowloaded html file.
-        urls: list of links for local resources and names for replacement.
+        url: url of the web page.
+
+    Returns:
+        Links for downloads and local paths for them.
     """
+    with open(path_to_html) as web_page:
+        soup = BeautifulSoup(web_page, 'html.parser')
+    urls = []
+    for each in LOCALS:
+        for link in soup.findAll(each):
+            if each != 'link':
+                try:
+                    if is_local(link[source], url):
+                        path = locals_path(link[source], url)
+                        urls.append((link[source], path))
+                        link[source] = path
+                except KeyError:
+                    continue
+            try:
+                if is_local(link[hyperlink], url):
+                    path = locals_path(link[hyperlink], url)
+                    urls.append((link[hyperlink], path))
+                    link[hyperlink] = path
+            except KeyError:
+                continue
+    with open(path_to_html, 'w') as web_page:
+        web_page.write(soup.prettify())
+    return urls
