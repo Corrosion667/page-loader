@@ -53,6 +53,10 @@ def locals_name(url, link):
     Returns:
         Generated name for image file.
     """
-    prefix = re.sub(r'[^a-zA-Z0-9]', '-', urlparse(url).netloc)
-    file_name = '{}{}'
-    return '{0}_files'.format(get_name(url))
+    if not urlparse(link).netloc:
+        link = '{0}{1}'.format(urlparse(url).netloc, link)
+    file_ext = pathlib.Path(link).suffix
+    if not file_ext:
+        file_ext = '.html'
+    body = re.sub(r'{0}$'.format(file_ext), '', link)
+    return get_name(body) + file_ext
