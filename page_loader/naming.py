@@ -43,15 +43,15 @@ def folder_name(url):
     return '{0}_files'.format(get_name(url)[:-1])
 
 
-def locals_name(url, link):
-    """Get name for local file depending on URL of page and link of the file.
+def locals_path(url, link):
+    """Get full path with folder and name for local file.
 
     Args:
         url: URL of the web page.
         link: src or href for the resource.
 
     Returns:
-        Generated name for image file.
+        Generated path for file.
     """
     if not urlparse(link).netloc:
         link = '{0}{1}'.format(urlparse(url).netloc, link)
@@ -59,4 +59,4 @@ def locals_name(url, link):
     if not file_ext:
         file_ext = '.html'
     body = re.sub(r'{0}$'.format(file_ext), '', link)
-    return '{0}{1}'.format(get_name(body), file_ext)
+    return '{0}/{1}{2}'.format(folder_name(url), get_name(body), file_ext)
