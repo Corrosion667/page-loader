@@ -4,7 +4,8 @@ import os
 from urllib.parse import urlparse
 
 import requests
-from page_loader.naming import html_name
+from page_loader.locals import get_and_replace_locals
+from page_loader.naming import folder_name, html_name
 
 default_path = os.getcwd()
 
@@ -19,11 +20,14 @@ def download(url, directory=default_path):
     Returns:
         Full path of download including file name.
     """
+    os.mkdir(os.path.join(directory, folder_name(url)))
     response = requests.get(url)
     file_name = html_name(url)
     download_path = os.path.join(directory, file_name)
     with open(download_path, 'w') as new_file:
         new_file.write(response.text)
+    downloads = get_and_replace_locals(download_path, url)
+    download_locals(downloads, url)
     return download_path
 
 
