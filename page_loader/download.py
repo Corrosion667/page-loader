@@ -26,8 +26,8 @@ def download(url, directory=default_path):
     download_path = os.path.join(directory, file_name)
     with open(download_path, 'w') as new_file:
         new_file.write(response.text)
-    downloads = get_and_replace_locals(download_path, url, directory)
-    download_locals(downloads, url)
+    downloads = get_and_replace_locals(download_path, url)
+    download_locals(downloads, url, directory)
     return download_path
 
 
