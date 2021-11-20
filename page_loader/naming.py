@@ -59,4 +59,4 @@ def locals_name(url, link):
     if not file_ext:
         file_ext = '.html'
     body = re.sub(r'{0}$'.format(file_ext), '', link)
-    return get_name(body) + file_ext
+    return '{0}{1}'.format(get_name(body), file_ext)
