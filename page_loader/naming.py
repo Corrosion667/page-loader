@@ -28,7 +28,7 @@ def html_name(url):
     Returns:
         Generated name for html file.
     """
-    return '{0}.html'.format(get_name(url)[:-1])
+    return '{0}.html'.format(get_name(url))
 
 
 def folder_name(url):
