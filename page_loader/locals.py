@@ -6,7 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 from page_loader.naming import locals_name
 
-LOCALS = ['img', 'link', 'script']
+LOCALS = ('img', 'link', 'script')
 
 
 def is_local(src, url):
@@ -40,12 +40,24 @@ def get_locals(url):
                 try:
                     if is_local(link['src'], url):
                         urls.append(
-                            (link['src'], locals_name(url, link['src'])))
+                            (link['src'], locals_name(link['src'], url)),
+                        )
                 except KeyError:
                     continue
             try:
                 if is_local(link['href'], url):
-                    urls.append((link['href'], locals_name(url, link['href'])))
+                    urls.append(
+                        (link['href'], locals_name(link['href'], url)),
+                    )
             except KeyError:
                 continue
     return urls
+
+
+def replace_locals(path_to_html, urls):
+    """Replace links in downloaded html page from web links to local files.
+
+    Args:
+        path_to_html: dowloaded html file.
+        urls: list of links for local resources and names for replacement.
+    """
