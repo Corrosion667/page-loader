@@ -16,7 +16,7 @@ def get_name(url):
     """
     prefix = urlparse(url).scheme
     body = re.sub(r'^{0}://'.format(prefix), '', url)
-    return re.sub(r'[^a-zA-Z0-9]', '-', body[:-1])
+    return re.sub(r'[^a-zA-Z0-9]', '-', body)
 
 
 def html_name(url):
@@ -28,7 +28,7 @@ def html_name(url):
     Returns:
         Generated name for html file.
     """
-    return '{0}.html'.format(get_name(url))
+    return '{0}.html'.format(get_name(url)[:-1])
 
 
 def folder_name(url):
