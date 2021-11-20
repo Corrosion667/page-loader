@@ -1,4 +1,4 @@
-"""Module for working with local resources."""
+"""Module for working with local resources."""  # noqa: WPS232
 
 from urllib.parse import urlparse
 
@@ -24,7 +24,7 @@ def is_local(src, url):
     return urlparse(src).netloc in {domain, ''}
 
 
-def get_and_replace_locals(path_to_html, url):
+def get_and_replace_locals(path_to_html, url):  # noqa: C901, WPS210, WPS231
     """Replace links in downloaded html page from web links to local files.
 
     Get list of tuples: links with local resources and file paths for downloads.
@@ -36,17 +36,17 @@ def get_and_replace_locals(path_to_html, url):
     Returns:
         Links for downloads and local paths for them.
     """
-    with open(path_to_html) as web_page:
-        soup = BeautifulSoup(web_page, 'html.parser')
+    with open(path_to_html) as html_file:
+        soup = BeautifulSoup(html_file, 'html.parser')
     urls = []
-    for each in LOCALS:
-        for link in soup.findAll(each):
+    for each in LOCALS:  # noqa: WPS327
+        for link in soup.findAll(each):  # noqa: WPS327
             if each != 'link':
                 try:
                     if is_local(link[source], url):
-                        path = locals_path(link[source], url)
-                        urls.append((link[source], path))
-                        link[source] = path
+                        path = locals_path(link[source], url)  # noqa: WPS220
+                        urls.append((link[source], path))  # noqa: WPS220
+                        link[source] = path  # noqa: WPS220
                 except KeyError:
                     continue
             try:
@@ -56,6 +56,6 @@ def get_and_replace_locals(path_to_html, url):
                     link[hyperlink] = path
             except KeyError:
                 continue
-    with open(path_to_html, 'w') as web_page:
-        web_page.write(soup.prettify())
+    with open(path_to_html, 'w') as new_html:
+        new_html.write(soup.prettify())
     return urls

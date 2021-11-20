@@ -31,7 +31,7 @@ def download(url, directory=default_path):
     return download_path
 
 
-def download_locals(downloads, url):
+def download_locals(downloads, url):  # noqa: WPS210
     """Download local resources.
 
     Args:
