@@ -40,7 +40,7 @@ def folder_name(url):
     Returns:
         Generated name for downloads directory.
     """
-    return '{0}_files'.format(get_name(url))
+    return '{0}_files'.format(get_name(url)[:-1])
 
 
 def locals_name(url, link):
