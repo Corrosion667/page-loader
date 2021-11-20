@@ -27,4 +27,4 @@ def test_download(requests_mock, tmp_path):
     file_name = html_name(TEST_URL)
     with open(os.path.join(tmp_path, file_name)) as test_file:
         test_content = test_file.read()
-        assert test_content == 'data'
+        assert test_content == 'data\n'
