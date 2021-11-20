@@ -26,23 +26,25 @@ def download(url, directory=default_path):
     download_path = os.path.join(directory, file_name)
     with open(download_path, 'w') as new_file:
         new_file.write(response.text)
-    downloads = get_and_replace_locals(download_path, url)
+    downloads = get_and_replace_locals(download_path, url, directory)
     download_locals(downloads, url)
     return download_path
 
 
-def download_locals(downloads, url):  # noqa: WPS210
+def download_locals(downloads, url, directory):  # noqa: WPS210
     """Download local resources.
 
     Args:
         downloads: list of links and file paths for downloads.
         url: url of the web page.
+        directory: folder set by user where scripts downloads everything.
     """
     for each in downloads:
         link, path = each
         if not urlparse(link).netloc:
             link = '{0}{1}'.format(urlparse(url).netloc, link)
         response = requests.get(link, stream=True)
+        path = os.path.join(directory, path)
         with open(path, 'wb') as local_file:
             for chunk in response.iter_content(chunk_size=None):
                 local_file.write(chunk)
