@@ -39,9 +39,9 @@ def get_and_replace_locals(path_to_html, url):  # noqa: C901, WPS210, WPS231
     with open(path_to_html) as html_file:
         soup = BeautifulSoup(html_file, 'html.parser')
     urls = []
-    for each in LOCALS:  # noqa: WPS327
-        for link in soup.findAll(each):  # noqa: WPS327
-            if each != 'link':
+    for tag in LOCALS:  # noqa: WPS327
+        for link in soup.findAll(tag):  # noqa: WPS327
+            if tag != 'link':
                 try:
                     if is_local(link[source], url):
                         path = locals_path(link[source], url)  # noqa: WPS220

@@ -35,12 +35,12 @@ def download_locals(downloads, url, directory):  # noqa: WPS210
     """Download local resources.
 
     Args:
-        downloads: list of links and file paths for downloads.
+        downloads: list of tuples: links and file paths for downloads.
         url: url of the web page.
         directory: folder set by user where scripts downloads everything.
     """
-    for each in downloads:
-        link, path = each
+    for pair in downloads:
+        link, path = pair
         if not urlparse(link).netloc:
             link = '{0}{1}'.format(urlparse(url).netloc, link)
         response = requests.get(link, stream=True)
