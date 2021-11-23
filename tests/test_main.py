@@ -3,7 +3,7 @@
 import os
 
 from page_loader.download import download
-from page_loader.naming import 
+
 TEST_URL = 'https://ru.hexlet.io/courses'
 
 
