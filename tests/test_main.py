@@ -15,7 +15,7 @@ def test_html_name():
     ) == 'ru-hexlet-io-courses.html'
 
 
-def test_download(requests_mock, tmp_path):
+def test_download(requests_mock, tmp_path):  # noqa: WPS218, WPS210
     """Test download function: check file existing, its content and local resources.
 
     Args:
