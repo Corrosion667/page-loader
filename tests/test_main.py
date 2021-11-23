@@ -3,16 +3,8 @@
 import os
 
 from page_loader.download import download
-from page_loader.naming import html_name
-
+from page_loader.naming import 
 TEST_URL = 'https://ru.hexlet.io/courses'
-
-
-def test_html_name():
-    """Test for checking naming parsing of web page URL."""
-    assert html_name(
-        'https://ru.hexlet.io/courses',
-    ) == 'ru-hexlet-io-courses.html'
 
 
 def test_download(requests_mock, tmp_path):  # noqa: WPS218, WPS210
