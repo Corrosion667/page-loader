@@ -11,6 +11,12 @@ from page_loader.naming import folder_name, html_name
 from progress.spinner import Spinner
 
 
+class ExpectedError(Exception):
+    """Group of estimated possible errors."""
+
+    pass
+
+
 class DownloadSpinner(Spinner):
     """Custom spinner to show progress of local downloads."""
 
