@@ -5,7 +5,7 @@ import re
 from urllib.parse import urlparse
 
 
-def get_name(url):
+def get_name(url: str) -> str:
     """Get basic name for downloads depending on the URL of page.
 
     Args:
@@ -19,7 +19,7 @@ def get_name(url):
     return re.sub(r'[^a-zA-Z0-9]', '-', body)
 
 
-def html_name(url):
+def html_name(url: str) -> str:
     """Get name for downloaded html file depending on the URL of page.
 
     Args:
@@ -31,7 +31,7 @@ def html_name(url):
     return '{0}.html'.format(get_name(url))
 
 
-def folder_name(url):
+def folder_name(url: str) -> str:
     """Get name for folder to download resources depending on the URL of page.
 
     Args:
@@ -43,7 +43,7 @@ def folder_name(url):
     return '{0}_files'.format(get_name(url))
 
 
-def locals_path(link, url):
+def locals_path(link: str, url: str) -> str:
     """Get full path with folder and name for local file.
 
     Args:

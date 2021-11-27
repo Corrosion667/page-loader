@@ -1,5 +1,6 @@
 """Module for working with local resources."""
 
+from typing import List
 from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
@@ -10,7 +11,7 @@ source = 'src'
 hyperlink = 'href'
 
 
-def is_local(src, url):
+def is_local(src: str, url: str) -> bool:
     """Criteria wether to download selected object or not.
 
     Args:
@@ -24,7 +25,7 @@ def is_local(src, url):
     return urlparse(src).netloc in {domain, ''}
 
 
-def get_and_replace_locals(path_to_html, url):  # noqa: C901, WPS210, WPS231
+def get_and_replace_locals(path_to_html: str, url: str) -> List[tuple]:  # noqa: C901, WPS210, WPS231, E501
     """Replace links in downloaded html page from web links to local files.
 
     Get list of tuples: links with local resources and file paths for downloads.

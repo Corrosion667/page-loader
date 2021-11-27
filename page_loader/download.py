@@ -1,6 +1,7 @@
 """Module to download web pages via their URLs."""
 
 import os
+from typing import List
 from urllib.parse import urlparse
 
 import requests
@@ -10,7 +11,7 @@ from page_loader.naming import folder_name, html_name
 default_path = os.getcwd()
 
 
-def download(url, directory=default_path):
+def download(url: str, directory: str = default_path) -> str:
     """Download web page and locals to the selected directory.
 
     Args:
@@ -31,11 +32,11 @@ def download(url, directory=default_path):
     return download_path
 
 
-def download_locals(downloads, url, directory):  # noqa: WPS210
+def download_locals(downloads: List[tuple], url: str, directory: str) -> None:  # noqa: WPS210, E501
     """Download local resources.
 
     Args:
-        downloads: list of tuples - pairs with links and paths for downloads.
+        downloads: pairs of links and paths for downloads.
         url: url of the web page.
         directory: folder set by user where scripts downloads everything.
     """
