@@ -7,6 +7,14 @@ from urllib.parse import urlparse
 import requests
 from page_loader.locals import get_and_replace_locals
 from page_loader.naming import folder_name, html_name
+from progress.spinner import Spinner
+
+
+class DownloadSpinner(Spinner):
+    """Custom spinner to show progress of local downloads."""
+
+    phases = ['✓ ']
+
 
 default_path = os.getcwd()
 
@@ -40,6 +48,7 @@ def download_locals(downloads: List[tuple], url: str, directory: str) -> None:  
         url: url of the web page.
         directory: folder set by user where scripts downloads everything.
     """
+    spinner = DownloadSpinner()
     for pair in downloads:
         link, path = pair
         if not urlparse(link).netloc:
@@ -53,3 +62,5 @@ def download_locals(downloads: List[tuple], url: str, directory: str) -> None:  
         with open(path, 'wb') as local_file:
             for chunk in response.iter_content(chunk_size=None):
                 local_file.write(chunk)
+        spinner.next()
+        print(link)  # noqa: WPS421
