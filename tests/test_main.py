@@ -6,44 +6,54 @@ from page_loader.download import download
 
 TEST_URL = 'https://ru.hexlet.io/courses'
 
+LOCALS_FIXTURES = (
+    'tests/fixtures/page.html',
+    'tests/fixtures/image.png',
+    'tests/fixtures/script.js',
+    'tests/fixtures/style.css',
+)
 
-def test_download(requests_mock, tmp_path):  # noqa: WPS218, WPS210
-    """Test download function: check file existing, its content and local resources.
+MOCKING_LINKS = (
+    TEST_URL,
+    'https://ru.hexlet.io/assets/professions/nodejs.png',
+    'https://ru.hexlet.io/packs/js/runtime.js',
+    'https://ru.hexlet.io/assets/application.css',
+)
+
+
+def test_download(requests_mock, tmp_path):  # noqa: WPS210
+    """Test download function: check downloaded html file, its content and local resources.
 
     Args:
         requests_mock: mock for HTTP request.
         tmp_path: temporary path for testing.
     """
-    with open('tests/fixtures/test_page.html') as web_page:
-        html_before = web_page.read()
-    with open('tests/fixtures/result_page.html') as result_page:
-        html_after = result_page.read()
-
-    requests_mock.get(TEST_URL, text=html_before)
-    requests_mock.get('https://ru.hexlet.io/assets/professions/nodejs.png')
-    requests_mock.get('https://ru.hexlet.io/assets/application.css')
-    requests_mock.get('https://ru.hexlet.io/packs/js/runtime.js')
+    for fixture, link in zip(LOCALS_FIXTURES, MOCKING_LINKS):
+        with open(fixture, 'rb') as fixture_file:
+            mocking_content = fixture_file.read()
+        requests_mock.get(link, content=mocking_content)
 
     download_path = download(TEST_URL, tmp_path)
-    image_path = os.path.join(
-        tmp_path, 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-professions-nodejs.png',
-    )
-    css_path = os.path.join(
-        tmp_path, 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-application.css',
-    )
-    js_path = os.path.join(
-        tmp_path, 'ru-hexlet-io-courses_files/ru-hexlet-io-packs-js-runtime.js',
-    )
-    html_path = os.path.join(
-        tmp_path, 'ru-hexlet-io-courses_files/ru-hexlet-io-courses.html',
-    )
 
-    assert os.path.exists(download_path)
-    assert os.path.exists(image_path)
-    assert os.path.exists(css_path)
-    assert os.path.exists(js_path)
-    assert os.path.exists(html_path)
+    downloaded_locals = (
+        os.path.join(
+            tmp_path, 'ru-hexlet-io-courses_files/ru-hexlet-io-courses.html',
+        ),
+        os.path.join(
+            tmp_path, 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-professions-nodejs.png',
+        ),
+        os.path.join(
+            tmp_path, 'ru-hexlet-io-courses_files/ru-hexlet-io-packs-js-runtime.js',
+        ),
+        os.path.join(
+            tmp_path, 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-application.css',
+        ),
+    )
+    for fixture, local in zip(LOCALS_FIXTURES, downloaded_locals):  # noqa: WPS440
+        with open(fixture, 'rb') as fixture_file:  # noqa: WPS440
+            with open(local, 'rb') as downloaded_file:
+                assert fixture_file.read() == downloaded_file.read()
 
-    with open(os.path.join(tmp_path, download_path)) as test_file:
-        test_content = test_file.read()
-        assert test_content == html_after
+    with open(download_path) as downloaded_html:
+        with open('tests/fixtures/result.html') as result_fixture:
+            assert downloaded_html.read() == result_fixture.read()
