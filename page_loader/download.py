@@ -24,8 +24,8 @@ def download(url, directory=default_path):
     response = requests.get(url)
     file_name = html_name(url)
     download_path = os.path.join(directory, file_name)
-    with open(download_path, 'w') as new_file:
-        new_file.write(response.text)
+    with open(download_path, 'wb') as new_file:
+        new_file.write(response.content)
     downloads = get_and_replace_locals(download_path, url)
     download_locals(downloads, url, directory)
     return download_path
