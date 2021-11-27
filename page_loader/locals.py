@@ -1,4 +1,4 @@
-"""Module for working with local resources."""  # noqa: WPS232
+"""Module for working with local resources."""
 
 from urllib.parse import urlparse
 
@@ -39,23 +39,20 @@ def get_and_replace_locals(path_to_html, url):  # noqa: C901, WPS210, WPS231
     with open(path_to_html) as html_file:
         soup = BeautifulSoup(html_file, 'html.parser')
     urls = []
-    for tag in LOCALS:  # noqa: WPS327
-        for link in soup.findAll(tag):  # noqa: WPS327
-            if tag != 'link':
-                try:
-                    if is_local(link[source], url):
-                        path = locals_path(link[source], url)  # noqa: WPS220
-                        urls.append((link[source], path))  # noqa: WPS220
-                        link[source] = path  # noqa: WPS220
-                except KeyError:
-                    continue
+    for tag in LOCALS:
+        for link in soup.findAll(tag):
             try:
-                if is_local(link[hyperlink], url):
-                    path = locals_path(link[hyperlink], url)
-                    urls.append((link[hyperlink], path))
-                    link[hyperlink] = path
+                ref = link[hyperlink] if tag == 'link' else link[source]
             except KeyError:
                 continue
+            if not is_local(ref, url):
+                continue
+            path = locals_path(ref, url)
+            urls.append((ref, path))
+            if tag != 'link':
+                link[source] = path
+                continue
+            link[hyperlink] = path
     with open(path_to_html, 'w') as new_html:
         new_html.write(soup.prettify())
     return urls
