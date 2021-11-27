@@ -5,6 +5,7 @@ from typing import List
 from urllib.parse import urlparse
 
 import requests
+from colorama import Fore
 from page_loader.locals import get_and_replace_locals
 from page_loader.naming import folder_name, html_name
 from progress.spinner import Spinner
@@ -13,7 +14,7 @@ from progress.spinner import Spinner
 class DownloadSpinner(Spinner):
     """Custom spinner to show progress of local downloads."""
 
-    phases = ['✓ ']
+    phases = [Fore.GREEN + '✓ ' + Fore.RESET]  # noqa: WPS336
 
 
 default_path = os.getcwd()
