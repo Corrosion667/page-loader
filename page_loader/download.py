@@ -75,8 +75,8 @@ def download_html(url: str, directory: str) -> str:
         response.raise_for_status()
     except requests.exceptions.RequestException:
         raise requests.exceptions.RequestException(
-            'Network error. Statis code is {0}'.format(
-                requests.get(url).status_code,
+            'Network error when downloading {0}. Status code is {1}'.format(
+                url, requests.get(url).status_code,
             ),
         )
     file_name = html_name(url)
@@ -93,6 +93,9 @@ def download_locals(downloads: List[tuple], url: str, directory: str) -> None:  
         downloads: pairs of links and paths for downloads.
         url: url of the web page.
         directory: folder set by user where scripts downloads everything.
+
+    Raises:
+        RequestException: is case of any network error.
     """
     spinner = DownloadSpinner()
     for pair in downloads:
@@ -103,7 +106,15 @@ def download_locals(downloads: List[tuple], url: str, directory: str) -> None:  
                 urlparse(url).netloc,
                 link,
             )
-        response = requests.get(link, stream=True)
+        try:
+            response = requests.get(link, stream=True)
+            response.raise_for_status()
+        except requests.exceptions.RequestException:
+            raise requests.exceptions.RequestException(
+                'Network error when downloading {0}. Status code is {1}'.format(
+                    link, requests.get(url).status_code,
+                ),
+            )
         path = os.path.join(directory, path)
         with open(path, 'wb') as local_file:
             for chunk in response.iter_content(chunk_size=None):
