@@ -69,6 +69,7 @@ def download_html(url: str, directory: str) -> str:
 
     Raises:
         RequestException: is case of any network error.
+        OSError: unexpected error.
     """
     try:
         response = requests.get(url)
@@ -81,12 +82,15 @@ def download_html(url: str, directory: str) -> str:
         )
     file_name = html_name(url)
     download_path = os.path.join(directory, file_name)
-    with open(download_path, 'wb') as new_file:
-        new_file.write(response.content)
+    try:
+        with open(download_path, 'wb') as new_file:
+            new_file.write(response.content)
+    except OSError:
+        raise OSError('Unknown error happened')
     return download_path
 
 
-def download_locals(downloads: List[tuple], url: str, directory: str) -> None:  # noqa: E501
+def download_locals(downloads: List[tuple], url: str, directory: str) -> None:  # noqa: E501, WPS231, C901
     """Download local resources.
 
     Args:
@@ -96,6 +100,7 @@ def download_locals(downloads: List[tuple], url: str, directory: str) -> None:  
 
     Raises:
         RequestException: is case of any network error.
+        OSError: unexpected error.
     """
     spinner = DownloadSpinner()
     for pair in downloads:
@@ -116,8 +121,11 @@ def download_locals(downloads: List[tuple], url: str, directory: str) -> None:  
                 ),
             )
         path = os.path.join(directory, path)
-        with open(path, 'wb') as local_file:
-            for chunk in response.iter_content(chunk_size=None):
-                local_file.write(chunk)
+        try:
+            with open(path, 'wb') as local_file:
+                for chunk in response.iter_content(chunk_size=None):
+                    local_file.write(chunk)
+        except OSError:
+            raise OSError('Unknown error happened')
         spinner.next()
         print(link)  # noqa: WPS421
