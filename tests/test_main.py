@@ -21,7 +21,7 @@ MOCKING_LINKS = (
 )
 
 
-def test_download(requests_mock, tmp_path):  # noqa: WPS210
+def test_download(requests_mock, tmp_path):
     """Test download function: check downloaded html file, its content and local resources.
 
     Args:
