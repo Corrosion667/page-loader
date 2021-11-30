@@ -1,7 +1,0 @@
-[run]
-omit = 
-    # omit scripts:
-    page_loader/scripts/*
-    # omit init.py empty files:
-    page_loader/scripts/__init__.py
-
