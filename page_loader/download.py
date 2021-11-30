@@ -57,7 +57,19 @@ def download(url: str, directory: str = default_path) -> str:
     return download_path
 
 
-def download_html(url: str, directory: str):
+def download_html(url: str, directory: str) -> str:
+    """Download html web page.
+
+    Args:
+        url: url of the web page.
+        directory: directory where to download html file.
+
+    Returns:
+        Full path of download including html file name
+
+    Raises:
+        RequestException: is case of any network error.
+    """
     try:
         response = requests.get(url)
         response.raise_for_status()
@@ -74,7 +86,7 @@ def download_html(url: str, directory: str):
     return download_path
 
 
-def download_locals(downloads: List[tuple], url: str, directory: str) -> None:  # noqa: WPS210, E501
+def download_locals(downloads: List[tuple], url: str, directory: str) -> None:  # noqa: E501
     """Download local resources.
 
     Args:
