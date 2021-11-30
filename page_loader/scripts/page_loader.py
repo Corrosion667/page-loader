@@ -7,7 +7,7 @@ from page_loader.download import default_path, download
 SUCCESS = "Page was successfully downloaded into '{0}'"
 
 
-def main() -> None:
+def main() -> None:  # pragma: no cover
     """Execute the page loader."""
     parser = argparse.ArgumentParser(description='Download web page')
     parser.add_argument(
@@ -25,5 +25,5 @@ def main() -> None:
     print(SUCCESS.format(path))
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     main()
