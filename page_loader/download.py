@@ -28,7 +28,7 @@ def download(url: str, directory: str = default_path) -> str:
         directory: directory where to download the page.
 
     Returns:
-        Full path of download including file name.
+        Full path of download including html file name.
 
     Raises:
         FileNotFoundError: user have chosen incorrect output directory.
@@ -51,14 +51,26 @@ def download(url: str, directory: str = default_path) -> str:
         )
     except OSError:
         raise OSError('Unknown error happened')
+    download_path = download_html(url, directory)
+    downloads = get_and_replace_locals(download_path, url)
+    download_locals(downloads, url, directory)
+    return download_path
 
-    response = requests.get(url)
+
+def download_html(url: str, directory: str):
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+    except requests.exceptions.RequestException:
+        raise requests.exceptions.RequestException(
+            'Network error. Statis code is {0}'.format(
+                requests.get(url).status_code,
+            ),
+        )
     file_name = html_name(url)
     download_path = os.path.join(directory, file_name)
     with open(download_path, 'wb') as new_file:
         new_file.write(response.content)
-    downloads = get_and_replace_locals(download_path, url)
-    download_locals(downloads, url, directory)
     return download_path
 
 
