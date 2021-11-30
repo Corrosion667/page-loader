@@ -11,12 +11,6 @@ from page_loader.naming import folder_name, html_name
 from progress.spinner import Spinner
 
 
-class ExpectedError(Exception):
-    """Group of estimated possible errors."""
-
-    pass
-
-
 class DownloadSpinner(Spinner):
     """Custom spinner to show progress of local downloads."""
 
@@ -35,8 +29,29 @@ def download(url: str, directory: str = default_path) -> str:
 
     Returns:
         Full path of download including file name.
+
+    Raises:
+        FileNotFoundError: user have chosen incorrect output directory.
+        PermissionError: user do not have access to the selected folder.
+        OSError: unexpected error.
     """
-    os.mkdir(os.path.join(directory, folder_name(url)))
+    try:
+        os.mkdir(os.path.join(directory, folder_name(url)))
+    except FileNotFoundError:
+        raise FileNotFoundError(
+            'Make sure you have choosen a vaild directory path: {0}'.format(
+                directory,
+            ),
+        )
+    except PermissionError:
+        raise PermissionError(
+            'You do not have access to directory: {0}'.format(
+                directory,
+            ),
+        )
+    except OSError:
+        raise OSError('Unknown error happened')
+
     response = requests.get(url)
     file_name = html_name(url)
     download_path = os.path.join(directory, file_name)
