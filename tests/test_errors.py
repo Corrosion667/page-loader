@@ -3,9 +3,11 @@
 import os
 
 import pytest
+import requests
 from page_loader.download import download
 
 UNACCESSABLE_RIGHTS = 000
+NETWORK_ERROR_CODE = 404
 TEST_URL = 'https://ru.hexlet.io/courses'
 
 
@@ -31,3 +33,15 @@ def test_unaccessable(tmp_path):
     os.chmod(unaccessable_path, UNACCESSABLE_RIGHTS)
     with pytest.raises(PermissionError):
         download(TEST_URL, unaccessable_path)
+
+
+def test_html_download_error(requests_mock, tmp_path):
+    """Test wether programm raises exception in network error took place.
+
+    Args:
+        requests_mock: mock for HTTP request.
+        tmp_path: temporary path for testing.
+    """
+    requests_mock.get(TEST_URL, status_code=NETWORK_ERROR_CODE)
+    with pytest.raises(requests.exceptions.RequestException):
+        download(TEST_URL, tmp_path)
