@@ -1,6 +1,7 @@
 """Module to download web pages via their URLs."""
 
 import os
+import pathlib
 from typing import List
 from urllib.parse import urlparse
 
@@ -39,8 +40,9 @@ def download(url: str, directory: str = default_path) -> str:
     Raises:
         ExpectedError: permission or file not found errors.
     """
+    files_folder = os.path.join(directory, folder_name(url))
     try:
-        os.mkdir(os.path.join(directory, folder_name(url)))
+        pathlib.Path(files_folder).mkdir(exist_ok=True)
     except FileNotFoundError:
         raise ExpectedError(
             'Make sure you have choosen a valid directory path: {0}'.format(
@@ -56,6 +58,8 @@ def download(url: str, directory: str = default_path) -> str:
     download_path = download_html(url, directory)
     downloads = get_and_replace_locals(download_path, url)
     download_locals(downloads, url, directory)
+    if not os.listdir(files_folder):
+        os.remove(files_folder)
     return download_path
 
 
