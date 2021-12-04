@@ -88,7 +88,7 @@ def download_html(url: str, directory: str) -> str:
     return download_path
 
 
-def download_locals(downloads: List[tuple], url: str, directory: str) -> None:  # noqa: E501, WPS231, C901
+def download_locals(downloads: List[tuple], url: str, directory: str) -> None:
     """Download local resources.
 
     Args:
