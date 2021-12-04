@@ -20,6 +20,12 @@ class DownloadSpinner(Spinner):
 default_path = os.getcwd()
 
 
+class ExpectedError(Exception):
+    """Class for errors expected during excecution of programm."""
+
+    pass
+
+
 def download(url: str, directory: str = default_path) -> str:
     """Download web page and locals to the selected directory.
 
@@ -31,26 +37,22 @@ def download(url: str, directory: str = default_path) -> str:
         Full path of download including html file name.
 
     Raises:
-        FileNotFoundError: user have chosen incorrect output directory.
-        PermissionError: user do not have access to the selected folder.
-        OSError: unexpected error.
+        ExpectedError: permission or file not found errors.
     """
     try:
         os.mkdir(os.path.join(directory, folder_name(url)))
     except FileNotFoundError:
-        raise FileNotFoundError(
+        raise ExpectedError(
             'Make sure you have choosen a vaild directory path: {0}'.format(
                 directory,
             ),
         )
     except PermissionError:
-        raise PermissionError(
+        raise ExpectedError(
             'You do not have access to directory: {0}'.format(
                 directory,
             ),
         )
-    except OSError:
-        raise OSError('Unknown error happened')
     download_path = download_html(url, directory)
     downloads = get_and_replace_locals(download_path, url)
     download_locals(downloads, url, directory)
@@ -69,7 +71,6 @@ def download_html(url: str, directory: str) -> str:
 
     Raises:
         RequestException: is case of any network error.
-        OSError: unexpected error.
     """
     try:
         response = requests.get(url)
@@ -82,11 +83,8 @@ def download_html(url: str, directory: str) -> str:
         )
     file_name = html_name(url)
     download_path = os.path.join(directory, file_name)
-    try:
-        with open(download_path, 'wb') as new_file:
-            new_file.write(response.content)
-    except OSError:
-        raise OSError('Unknown error happened')
+    with open(download_path, 'wb') as new_file:
+        new_file.write(response.content)
     return download_path
 
 
@@ -100,7 +98,6 @@ def download_locals(downloads: List[tuple], url: str, directory: str) -> None:  
 
     Raises:
         RequestException: is case of any network error.
-        OSError: unexpected error.
     """
     spinner = DownloadSpinner()
     for pair in downloads:
@@ -121,11 +118,8 @@ def download_locals(downloads: List[tuple], url: str, directory: str) -> None:  
                 ),
             )
         path = os.path.join(directory, path)
-        try:
-            with open(path, 'wb') as local_file:
-                for chunk in response.iter_content(chunk_size=None):
-                    local_file.write(chunk)
-        except OSError:
-            raise OSError('Unknown error happened')
+        with open(path, 'wb') as local_file:
+            for chunk in response.iter_content(chunk_size=None):
+                local_file.write(chunk)
         spinner.next()
         print(link)  # noqa: WPS421
