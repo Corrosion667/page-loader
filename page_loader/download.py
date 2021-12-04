@@ -43,7 +43,7 @@ def download(url: str, directory: str = default_path) -> str:
         os.mkdir(os.path.join(directory, folder_name(url)))
     except FileNotFoundError:
         raise ExpectedError(
-            'Make sure you have choosen a vaild directory path: {0}'.format(
+            'Make sure you have choosen a valid directory path: {0}'.format(
                 directory,
             ),
         )
