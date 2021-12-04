@@ -2,7 +2,6 @@
 """This program downloads a page from the network."""
 import argparse
 import logging
-import logging.config
 
 import requests
 from page_loader.download import ExpectedError, default_path, download
