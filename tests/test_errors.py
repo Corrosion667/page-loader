@@ -7,6 +7,7 @@ import requests
 from page_loader.download import ExpectedError, download
 
 UNACCESSABLE_RIGHTS = 000
+ACCESSABLE_RIGHTS = 777
 NETWORK_ERROR_CODE = 404
 TEST_URL = 'https://ru.hexlet.io/courses'
 
@@ -30,9 +31,10 @@ def test_unaccessable(tmp_path):
     """
     unaccessable_path = os.path.join(tmp_path, 'wrong_folder')
     os.mkdir(unaccessable_path)
-    os.chmod(unaccessable_path, UNACCESSABLE_RIGHTS)
     with pytest.raises(ExpectedError):
+        os.chmod(unaccessable_path, UNACCESSABLE_RIGHTS)
         download(TEST_URL, unaccessable_path)
+        os.chmod(unaccessable_path, ACCESSABLE_RIGHTS)
 
 
 def test_html_download_error(requests_mock, tmp_path):
