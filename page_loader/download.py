@@ -41,13 +41,13 @@ def download(url: str, directory: str = default_path) -> str:
     """
     try:
         os.mkdir(os.path.join(directory, folder_name(url)))
-    except FileNotFoundError as err:
+    except FileNotFoundError:
         raise ExpectedError(
             'Make sure you have choosen a vaild directory path: {0}'.format(
                 directory,
             ),
         )
-    except PermissionError as err:
+    except PermissionError:
         raise ExpectedError(
             'You do not have access to directory: {0}'.format(
                 directory,
@@ -75,7 +75,7 @@ def download_html(url: str, directory: str) -> str:
     try:
         response = requests.get(url)
         response.raise_for_status()
-    except requests.exceptions.RequestException as err:
+    except requests.exceptions.RequestException:
         raise requests.exceptions.RequestException(
             'Network error when downloading {0}. Status code is {1}'.format(
                 url, requests.get(url).status_code,
