@@ -10,7 +10,7 @@
 
 ## Basic information
 
-**Page loader** downloads the web page allowing user to open it offline. This is achieved due to the fact that the program also downloads local resources of the web page to the computer. Web page is downloaded to the directory chosen by user or by default to the current working directory.
+**Page loader** downloads the web page to an existing folder allowing user to open it offline. This is achieved due to the fact that the program also downloads local resources of the web page to the computer. Web page is downloaded to the directory chosen by user or by default to the current working directory.
 
 ## Quickstart
 
@@ -35,3 +35,4 @@ page-loader -h
 ## Asciinema demonstration:
 
 Installing the whole package and main features of the programm are demonstrated in the asciinema below:
+[![asciicast](https://asciinema.org/a/2TtjolhjMZM1VU1OiBhc9dFvy.svg)](https://asciinema.org/a/2TtjolhjMZM1VU1OiBhc9dFvy)
