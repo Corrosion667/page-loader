@@ -34,7 +34,7 @@ def test_unaccessable(tmp_path):
     with pytest.raises(ExpectedError):
         os.chmod(unaccessable_path, UNACCESSABLE_RIGHTS)
         download(TEST_URL, unaccessable_path)
-        os.chmod(unaccessable_path, ACCESSABLE_RIGHTS)
+    os.chmod(unaccessable_path, ACCESSABLE_RIGHTS)
 
 
 def test_html_download_error(requests_mock, tmp_path):
