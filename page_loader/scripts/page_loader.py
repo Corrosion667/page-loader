@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """This program downloads a page from the network."""
 import argparse
-import logging.config  # noqa: WPS301
+import logging
 import sys
+from logging import config as conf
 
 import requests
 from page_loader.download import ExpectedError, default_path, download
@@ -10,7 +11,7 @@ from page_loader.logging_settings import LOGGING_CONFIG
 
 SUCCESS = "Page was successfully downloaded into '{0}'"
 
-logging.config.dictConfig(LOGGING_CONFIG)
+conf.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger('default_logger')
 
 
