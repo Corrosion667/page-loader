@@ -17,10 +17,9 @@ logging_config = {
     },
 
     'loggers': {
-        'my_logger': {
+        'default_logger': {
             'handlers': ['stream_handler'],
-            'level': 'DEBUG',
-            'propagate': True
+            'level': 'DEBUG'
         }
     }
 }
