@@ -80,6 +80,7 @@ def download_html(url: str, directory: str) -> str:
         response = requests.get(url)
         response.raise_for_status()
     except requests.exceptions.RequestException:
+        os.remove(os.path.join(directory, folder_name(url)))
         raise requests.exceptions.RequestException(
             'Network error when downloading {0}. Status code is {1}'.format(
                 url, requests.get(url).status_code,
@@ -116,6 +117,7 @@ def download_locals(downloads: List[tuple], url: str, directory: str) -> None:
             response = requests.get(link, stream=True)
             response.raise_for_status()
         except requests.exceptions.RequestException:
+            os.remove(os.path.join(directory, folder_name(url)))
             raise requests.exceptions.RequestException(
                 'Network error when downloading {0}. Status code is {1}'.format(
                     link, requests.get(url).status_code,
