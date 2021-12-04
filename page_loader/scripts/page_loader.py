@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """This program downloads a page from the network."""
 import argparse
-import logging
+import logging.config  # noqa: WPS301
+import sys
 
 import requests
 from page_loader.download import ExpectedError, default_path, download
@@ -31,9 +32,12 @@ def main() -> None:
         path = download(args.url, args.output)
     except (ExpectedError, requests.exceptions.RequestException) as err:
         logger.error(err)
+        sys.exit(1)
     except Exception as err:
         logger.error('Unknown {0} error happened'.format(str(err)))
+        sys.exit(1)
     print(SUCCESS.format(path))
+    sys.exit(0)
 
 
 if __name__ == '__main__':
