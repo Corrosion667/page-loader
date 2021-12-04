@@ -16,7 +16,7 @@ LOGGING_CONFIG = {
     },
 
     'loggers': {
-        'default_logger': {
+        'page_loader': {
             'handlers': ['stream_handler'],
             'level': 'DEBUG'
         }

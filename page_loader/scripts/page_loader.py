@@ -12,7 +12,7 @@ from page_loader.logging_settings import LOGGING_CONFIG
 SUCCESS = "Page was successfully downloaded into '{0}'"
 
 conf.dictConfig(LOGGING_CONFIG)
-logger = logging.getLogger('default_logger')
+logger = logging.getLogger(__name__)
 
 
 def main() -> None:
