@@ -19,6 +19,7 @@ class DownloadSpinner(Spinner):
     phases = [Fore.GREEN + '✓ ' + Fore.RESET]  # noqa: WPS336
 
 
+# FIXME: нейминг, конснтанты в UPPERCASE именуем
 default_path = os.getcwd()
 
 
@@ -56,9 +57,17 @@ def download(url: str, directory: str = default_path) -> str:
                 directory,
             ),
         )
+    # FIXME: могут и другие ошибки произойти, например место на диске закончится.
+    # Проще всего ловить отдельно еще все остальные OSError/IOError тоже для надежности
+
     download_path = download_html(url, directory)
+
+    # FIXME: нейминг, не очень понятно, что за "downloads" + что такое locals?
     downloads = get_and_replace_locals(download_path, url)
+
+    # FIXME: нейминг, термин locals не очень понятный
     download_locals(downloads, url, directory)
+
     if not os.listdir(files_folder):
         os.remove(files_folder)
     return download_path
@@ -106,8 +115,12 @@ def download_locals(downloads: List[tuple], url: str, directory: str) -> None:
         RequestException: is case of any network error.
     """
     spinner = DownloadSpinner()
+    # fixme: можно сразу в цикле распаковать
+    # for link, parth in downloads
     for pair in downloads:
         link, path = pair
+        # fixme: получается дублирование кода по формированию полного url здесь и в функции получения ссылок
+        # можно как-то его избежать?
         if not urlparse(link).netloc:
             link = '{0}://{1}{2}'.format(
                 urlparse(url).scheme,
@@ -118,6 +131,8 @@ def download_locals(downloads: List[tuple], url: str, directory: str) -> None:
             response = requests.get(link, stream=True)
             response.raise_for_status()
         except requests.exceptions.RequestException:
+            # fixme: точно ли нужно прерывать работу и все удалять, если хотя бы 1 ресурс не загрузился?
+            # страницу можно в принципе и без одной картинки посмотреть если что
             shutil.rmtree(os.path.join(directory, folder_name(url)))
             raise requests.exceptions.RequestException(
                 'Network error when downloading {0}. Status code is {1}'.format(

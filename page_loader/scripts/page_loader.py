@@ -31,6 +31,7 @@ def main() -> None:
     args = parser.parse_args()
     try:
         path = download(args.url, args.output)
+    # FIXME: кроме expectederror просачивается еще исключения из requests, в этом есть какой-то смысл? Почему бы их тоже в ExpectedError не завернуть?
     except (ExpectedError, requests.exceptions.RequestException) as err:
         logger.error(err)
         sys.exit(1)

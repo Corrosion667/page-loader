@@ -5,6 +5,7 @@ import re
 from urllib.parse import urlparse
 
 
+# fixme: нейминг, я бы предложил все-таки как-то уточнить, что это за имя тут получается
 def get_name(url: str) -> str:
     """Get basic name for downloads depending on the URL of page.
 
@@ -15,6 +16,9 @@ def get_name(url: str) -> str:
         Generated name.
     """
     prefix = urlparse(url).scheme
+    # FIXME: url.removeprefix(prefix)
+    # можно без регулярок обойтись для удаления схемы
+
     body = re.sub(r'^{0}://'.format(prefix), '', url)
     return re.sub(r'[^a-zA-Z0-9]', '-', body)
 
