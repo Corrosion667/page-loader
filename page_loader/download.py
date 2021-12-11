@@ -114,10 +114,7 @@ def download_locals(downloads: List[tuple], url: str, directory: str) -> None:
         RequestException: is case of any network error.
     """
     spinner = DownloadSpinner()
-    # fixme: можно сразу в цикле распаковать
-    # for link, parth in downloads
-    for pair in downloads:
-        link, path = pair
+    for link, path in downloads:
         # fixme: получается дублирование кода по формированию полного url здесь и в функции получения ссылок
         # можно как-то его избежать?
         if not urlparse(link).netloc:
