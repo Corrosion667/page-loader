@@ -1,5 +1,6 @@
 """Module to download web pages via their URLs."""
 
+import logging
 import os
 import pathlib
 import shutil
@@ -25,6 +26,7 @@ class ExpectedError(Exception):
     pass
 
 
+logger = logging.getLogger(__name__)
 DEFAULT_PATH = os.getcwd()
 
 
@@ -109,9 +111,6 @@ def download_locals(downloads: List[tuple], url: str, directory: str) -> None:
         downloads: pairs of links and paths for downloads.
         url: url of the web page.
         directory: folder set by user where scripts downloads everything.
-
-    Raises:
-        RequestException: is case of any network error.
     """
     spinner = DownloadSpinner()
     for link, path in downloads:
@@ -127,10 +126,7 @@ def download_locals(downloads: List[tuple], url: str, directory: str) -> None:
             response = requests.get(link, stream=True)
             response.raise_for_status()
         except requests.exceptions.RequestException:
-            # fixme: точно ли нужно прерывать работу и все удалять, если хотя бы 1 ресурс не загрузился?
-            # страницу можно в принципе и без одной картинки посмотреть если что
-            shutil.rmtree(os.path.join(directory, folder_name(url)))
-            raise requests.exceptions.RequestException(
+            logger.debug(
                 'Network error when downloading {0}. Status code is {1}'.format(
                     link, requests.get(url).status_code,
                 ),
