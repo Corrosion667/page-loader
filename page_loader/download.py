@@ -57,17 +57,13 @@ def download(url: str, directory: str = DEFAULT_PATH) -> str:
                 directory,
             ),
         )
-    # FIXME: могут и другие ошибки произойти, например место на диске закончится.
-    # Проще всего ловить отдельно еще все остальные OSError/IOError тоже для надежности
-
+    except (OSError, IOError) as err:
+        raise ExpectedError('Unknown {0} error happened'.format(str(err)))
     download_path = download_html(url, directory)
-
     # FIXME: нейминг, не очень понятно, что за "downloads" + что такое locals?
     downloads = get_and_replace_locals(download_path, url)
-
     # FIXME: нейминг, термин locals не очень понятный
     download_locals(downloads, url, directory)
-
     if not os.listdir(files_folder):
         os.remove(files_folder)
     return download_path
