@@ -83,14 +83,14 @@ def download_html(url: str, directory: str) -> str:
         Full path of download including html file name
 
     Raises:
-        RequestException: is case of any network error.
+        ExpectedError: is case of any network error.
     """
     try:
         response = requests.get(url)
         response.raise_for_status()
     except requests.exceptions.RequestException:
         shutil.rmtree(os.path.join(directory, folder_name(url)))
-        raise requests.exceptions.RequestException(
+        raise ExpectedError(
             'Network error when downloading {0}. Status code is {1}'.format(
                 url, requests.get(url).status_code,
             ),
