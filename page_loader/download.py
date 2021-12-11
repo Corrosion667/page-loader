@@ -13,6 +13,9 @@ from page_loader.locals import get_and_replace_locals
 from page_loader.naming import folder_name, html_name
 from progress.spinner import Spinner
 
+DEFAULT_PATH = os.getcwd()
+logger = logging.getLogger(__name__)
+
 
 class DownloadSpinner(Spinner):
     """Custom spinner to show progress of local downloads."""
@@ -24,10 +27,6 @@ class ExpectedError(Exception):
     """Class for errors expected during excecution of programm."""
 
     pass
-
-
-logger = logging.getLogger(__name__)
-DEFAULT_PATH = os.getcwd()
 
 
 def download(url: str, directory: str = DEFAULT_PATH) -> str:
