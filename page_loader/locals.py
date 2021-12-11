@@ -25,7 +25,7 @@ def is_local(src: str, url: str) -> bool:
     return urlparse(src).netloc in {domain, ''}
 
 
-def get_and_replace_locals(path_to_html: str, url: str) -> List[tuple]:  # noqa: C901, WPS231, E501
+def get_and_replace_links(path_to_html: str, url: str) -> List[tuple]:  # noqa: C901, WPS231, E501
     """Replace links in downloaded html page from web links to local files.
 
     Get list of tuples: links with local resources and file paths for downloads.

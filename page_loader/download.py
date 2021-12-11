@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 
 import requests
 from colorama import Fore
-from page_loader.locals import get_and_replace_locals
+from page_loader.locals import get_and_replace_links
 from page_loader.naming import folder_name, html_name
 from progress.spinner import Spinner
 
@@ -60,10 +60,8 @@ def download(url: str, directory: str = DEFAULT_PATH) -> str:
     except OSError as err:
         raise ExpectedError('Unknown {0} error happened'.format(str(err)))
     download_path = download_html(url, directory)
-    # FIXME: нейминг, не очень понятно, что за "downloads" + что такое locals?
-    downloads = get_and_replace_locals(download_path, url)
-    # FIXME: нейминг, термин locals не очень понятный
-    download_locals(downloads, url, directory)
+    links = get_and_replace_links(download_path, url)
+    download_resources(links, url, directory)
     if not os.listdir(files_folder):
         os.remove(files_folder)
     return download_path
@@ -99,16 +97,16 @@ def download_html(url: str, directory: str) -> str:
     return download_path
 
 
-def download_locals(downloads: List[tuple], url: str, directory: str) -> None:
+def download_resources(links: List[tuple], url: str, directory: str) -> None:
     """Download local resources.
 
     Args:
-        downloads: pairs of links and paths for downloads.
+        links: pairs of links and paths for downloads.
         url: url of the web page.
         directory: folder set by user where scripts downloads everything.
     """
     spinner = DownloadSpinner()
-    for link, path in downloads:
+    for link, path in links:
         # fixme: получается дублирование кода по формированию полного url здесь и в функции получения ссылок
         # можно как-то его избежать?
         if not urlparse(link).netloc:
