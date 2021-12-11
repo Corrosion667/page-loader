@@ -6,7 +6,7 @@ import sys
 from logging import config as conf
 
 import requests
-from page_loader.download import ExpectedError, default_path, download
+from page_loader.download import ExpectedError, DEFAULT_PATH, download
 from page_loader.logging_settings import LOGGING_CONFIG
 
 SUCCESS = "Page was successfully downloaded into '{0}'"
@@ -22,9 +22,9 @@ def main() -> None:
         '-o',
         '--output',
         type=str,
-        default=default_path,
+        default=DEFAULT_PATH,
         help='select folder where to download the page; default: {0}'.format(
-            default_path,
+            DEFAULT_PATH,
         ),
     )
     parser.add_argument('url', type=str)

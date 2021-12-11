@@ -19,17 +19,16 @@ class DownloadSpinner(Spinner):
     phases = [Fore.GREEN + '✓ ' + Fore.RESET]  # noqa: WPS336
 
 
-# FIXME: нейминг, конснтанты в UPPERCASE именуем
-default_path = os.getcwd()
-
-
 class ExpectedError(Exception):
     """Class for errors expected during excecution of programm."""
 
     pass
 
 
-def download(url: str, directory: str = default_path) -> str:
+DEFAULT_PATH = os.getcwd()
+
+
+def download(url: str, directory: str = DEFAULT_PATH) -> str:
     """Download web page and locals to the selected directory.
 
     Args:
