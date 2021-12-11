@@ -6,12 +6,9 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from page_loader.naming import locals_path
 
-# FIXME: нейминг, что за locals?
-LOCALS = ('img', 'link', 'script')
-
-# FIXME: нейминг, конснтанты именуем в UPPERCASE
-source = 'src'
-hyperlink = 'href'
+LOCAL_TAGS = ('img', 'link', 'script')
+SOURCE = 'src'
+HYPERLINK = 'href'
 
 
 def is_local(src: str, url: str) -> bool:
@@ -43,12 +40,12 @@ def get_and_replace_locals(path_to_html: str, url: str) -> List[tuple]:  # noqa:
     with open(path_to_html) as html_file:
         soup = BeautifulSoup(html_file, 'html.parser')
     urls = []
-    for tag in LOCALS:
+    for tag in LOCAL_TAGS:
         # FIXME: findALl может сразу несколько тегов искать, может чуть код упростить
         for link in soup.findAll(tag):
             try:
                 # FIXME: если добавится еще один вид тегов со своими атрибутами, то сильно разрастется if этот
-                ref = link[hyperlink] if tag == 'link' else link[source]
+                ref = link[HYPERLINK] if tag == 'link' else link[SOURCE]
             except KeyError:
                 continue
             if not is_local(ref, url):
@@ -58,9 +55,9 @@ def get_and_replace_locals(path_to_html: str, url: str) -> List[tuple]:  # noqa:
 
             # FIXME: та же самая сложность с if, сейчас это работает, но если вдруг появится третий тег с другим атрибутом, то придется сильно переписывать уже
             if tag != 'link':
-                link[source] = path
+                link[SOURCE] = path
                 continue
-            link[hyperlink] = path
+            link[HYPERLINK] = path
     with open(path_to_html, 'w') as new_html:
         new_html.write(soup.prettify())
     return urls
