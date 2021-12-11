@@ -131,6 +131,7 @@ def download_locals(downloads: List[tuple], url: str, directory: str) -> None:
                     link, requests.get(url).status_code,
                 ),
             )
+            continue
         path = os.path.join(directory, path)
         with open(path, 'wb') as local_file:
             for chunk in response.iter_content(chunk_size=None):
