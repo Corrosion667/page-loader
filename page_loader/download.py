@@ -57,7 +57,7 @@ def download(url: str, directory: str = DEFAULT_PATH) -> str:
                 directory,
             ),
         )
-    except (OSError, IOError) as err:
+    except OSError as err:
         raise ExpectedError('Unknown {0} error happened'.format(str(err)))
     download_path = download_html(url, directory)
     # FIXME: нейминг, не очень понятно, что за "downloads" + что такое locals?
