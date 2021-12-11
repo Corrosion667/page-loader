@@ -15,9 +15,6 @@ def site_name(url: str) -> str:
         Generated site name.
     """
     prefix = urlparse(url).scheme
-    # FIXME: url.removeprefix(prefix)
-    # можно без регулярок обойтись для удаления схемы
-
     body = re.sub(r'^{0}://'.format(prefix), '', url)
     return re.sub(r'[^a-zA-Z0-9]', '-', body)
 
