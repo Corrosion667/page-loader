@@ -5,7 +5,6 @@ import os
 import pathlib
 import shutil
 from typing import List
-from urllib.parse import urlparse
 
 import requests
 from colorama import Fore
@@ -107,14 +106,6 @@ def download_resources(links: List[tuple], url: str, directory: str) -> None:
     """
     spinner = DownloadSpinner()
     for link, path in links:
-        # fixme: получается дублирование кода по формированию полного url здесь и в функции получения ссылок
-        # можно как-то его избежать?
-        if not urlparse(link).netloc:
-            link = '{0}://{1}{2}'.format(
-                urlparse(url).scheme,
-                urlparse(url).netloc,
-                link,
-            )
         try:
             response = requests.get(link, stream=True)
             response.raise_for_status()

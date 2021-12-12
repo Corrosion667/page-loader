@@ -25,6 +25,25 @@ def is_local(src: str, url: str) -> bool:
     return urlparse(src).netloc in {domain, ''}
 
 
+def prepare_link(link: str, url: str) -> str:
+    """Check if link has scheme and netloc and add them if missing.
+
+    Args:
+        link: initial link for download resource.
+        url: url of the web page where resource is used.
+
+    Returns:
+        Link with scheme and netloc.
+    """
+    if not urlparse(link).netloc:
+        link = '{0}://{1}{2}'.format(
+            urlparse(url).scheme,
+            urlparse(url).netloc,
+            link,
+        )
+    return link
+
+
 def get_and_replace_links(path_to_html: str, url: str) -> List[tuple]:  # noqa: C901, WPS231, E501
     """Replace links in downloaded html page from web links to local files.
 
@@ -51,7 +70,7 @@ def get_and_replace_links(path_to_html: str, url: str) -> List[tuple]:  # noqa: 
             if not is_local(ref, url):
                 continue
             path = locals_path(ref, url)
-            urls.append((ref, path))
+            urls.append((prepare_link(ref, url), path))
 
             # FIXME: та же самая сложность с if, сейчас это работает, но если вдруг появится третий тег с другим атрибутом, то придется сильно переписывать уже
             if tag != 'link':
