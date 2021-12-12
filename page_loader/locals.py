@@ -48,7 +48,7 @@ def prepare_link(link: str, url: str) -> str:
     return link
 
 
-def get_and_replace_links(path_to_html: str, url: str) -> List[tuple]:  # noqa: WPS231, E501
+def get_and_replace_links(path_to_html: str, url: str) -> List[tuple]:
     """Replace links in downloaded html page from web links to local files.
 
     Get list of tuples: links with local resources and file paths for downloads.
@@ -63,17 +63,16 @@ def get_and_replace_links(path_to_html: str, url: str) -> List[tuple]:  # noqa: 
     with open(path_to_html) as html_file:
         soup = BeautifulSoup(html_file, 'html.parser')
     urls = []
-    for tag in resource_tags_map.keys():
-        for link in soup.findAll(tag):
-            try:
-                ref = link[resource_tags_map[tag]]
-            except KeyError:
-                continue
-            if not is_local(ref, url):
-                continue
-            path = locals_path(ref, url)
-            urls.append((prepare_link(ref, url), path))
-            link[resource_tags_map[tag]] = path
+    for link in soup.findAll(resource_tags_map.keys()):
+        try:
+            ref = link[resource_tags_map[link.name]]
+        except KeyError:
+            continue
+        if not is_local(ref, url):
+            continue
+        path = locals_path(ref, url)
+        urls.append((prepare_link(ref, url), path))
+        link[resource_tags_map[link.name]] = path
     with open(path_to_html, 'w') as new_html:
         new_html.write(soup.prettify())
     return urls
