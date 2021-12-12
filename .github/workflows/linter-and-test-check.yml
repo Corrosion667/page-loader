@@ -13,11 +13,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
-      - name: updating dpendencies and do linter and test check
+      - name: updating dpendencies and do linter check
         run: |
           pip install poetry
           make install
-          make check
+          make lint
       - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v2.7.5
         env:

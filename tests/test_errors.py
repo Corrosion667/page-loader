@@ -3,7 +3,6 @@
 import os
 
 import pytest
-import requests
 from page_loader.download import ExpectedError, download
 
 UNACCESSABLE_RIGHTS = 000
@@ -47,25 +46,5 @@ def test_html_download_error(requests_mock, tmp_path):
         tmp_path: temporary path for testing.
     """
     requests_mock.get(TEST_URL, status_code=NETWORK_ERROR_CODE)
-    with pytest.raises(requests.exceptions.RequestException):
-        download(TEST_URL, tmp_path)
-
-
-def test_local_download_error(requests_mock, tmp_path):
-    """Test whether programm raises exception if network error took place.
-
-    Error happens during download of local resource.
-
-    Args:
-        requests_mock: mock for HTTP request.
-        tmp_path: temporary path for testing.
-    """
-    with open('tests/fixtures/page.html', 'rb') as fixture_file:
-        mocking_content = fixture_file.read()
-    requests_mock.get(TEST_URL, content=mocking_content)
-    requests_mock.get(
-        'https://ru.hexlet.io/assets/professions/nodejs.png',
-        status_code=NETWORK_ERROR_CODE,
-    )
-    with pytest.raises(requests.exceptions.RequestException):
+    with pytest.raises(ExpectedError):
         download(TEST_URL, tmp_path)

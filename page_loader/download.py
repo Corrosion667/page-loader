@@ -1,16 +1,19 @@
 """Module to download web pages via their URLs."""
 
+import logging
 import os
 import pathlib
 import shutil
 from typing import List
-from urllib.parse import urlparse
 
 import requests
 from colorama import Fore
-from page_loader.locals import get_and_replace_locals
+from page_loader.locals import get_and_replace_links
 from page_loader.naming import folder_name, html_name
 from progress.spinner import Spinner
+
+DEFAULT_PATH = os.getcwd()
+logger = logging.getLogger(__name__)
 
 
 class DownloadSpinner(Spinner):
@@ -19,16 +22,13 @@ class DownloadSpinner(Spinner):
     phases = [Fore.GREEN + '✓ ' + Fore.RESET]  # noqa: WPS336
 
 
-default_path = os.getcwd()
-
-
 class ExpectedError(Exception):
     """Class for errors expected during excecution of programm."""
 
     pass
 
 
-def download(url: str, directory: str = default_path) -> str:
+def download(url: str, directory: str = DEFAULT_PATH) -> str:
     """Download web page and locals to the selected directory.
 
     Args:
@@ -56,9 +56,11 @@ def download(url: str, directory: str = default_path) -> str:
                 directory,
             ),
         )
+    except OSError as err:
+        raise ExpectedError('Unknown {0} error happened'.format(str(err)))
     download_path = download_html(url, directory)
-    downloads = get_and_replace_locals(download_path, url)
-    download_locals(downloads, url, directory)
+    links = get_and_replace_links(download_path, url)
+    download_resources(links, url, directory)
     if not os.listdir(files_folder):
         os.remove(files_folder)
     return download_path
@@ -75,14 +77,14 @@ def download_html(url: str, directory: str) -> str:
         Full path of download including html file name
 
     Raises:
-        RequestException: is case of any network error.
+        ExpectedError: is case of any network error.
     """
     try:
         response = requests.get(url)
         response.raise_for_status()
     except requests.exceptions.RequestException:
         shutil.rmtree(os.path.join(directory, folder_name(url)))
-        raise requests.exceptions.RequestException(
+        raise ExpectedError(
             'Network error when downloading {0}. Status code is {1}'.format(
                 url, requests.get(url).status_code,
             ),
@@ -94,36 +96,26 @@ def download_html(url: str, directory: str) -> str:
     return download_path
 
 
-def download_locals(downloads: List[tuple], url: str, directory: str) -> None:
+def download_resources(links: List[tuple], url: str, directory: str) -> None:
     """Download local resources.
 
     Args:
-        downloads: pairs of links and paths for downloads.
+        links: pairs of links and paths for downloads.
         url: url of the web page.
         directory: folder set by user where scripts downloads everything.
-
-    Raises:
-        RequestException: is case of any network error.
     """
     spinner = DownloadSpinner()
-    for pair in downloads:
-        link, path = pair
-        if not urlparse(link).netloc:
-            link = '{0}://{1}{2}'.format(
-                urlparse(url).scheme,
-                urlparse(url).netloc,
-                link,
-            )
+    for link, path in links:
         try:
             response = requests.get(link, stream=True)
             response.raise_for_status()
         except requests.exceptions.RequestException:
-            shutil.rmtree(os.path.join(directory, folder_name(url)))
-            raise requests.exceptions.RequestException(
+            logger.debug(
                 'Network error when downloading {0}. Status code is {1}'.format(
                     link, requests.get(url).status_code,
                 ),
             )
+            continue
         path = os.path.join(directory, path)
         with open(path, 'wb') as local_file:
             for chunk in response.iter_content(chunk_size=None):

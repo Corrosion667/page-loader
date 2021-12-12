@@ -5,14 +5,14 @@ import re
 from urllib.parse import urlparse
 
 
-def get_name(url: str) -> str:
-    """Get basic name for downloads depending on the URL of page.
+def site_name(url: str) -> str:
+    """Get basic site name for downloads depending on the URL of page.
 
     Args:
         url: URL of the web page.
 
     Returns:
-        Generated name.
+        Generated site name.
     """
     prefix = urlparse(url).scheme
     body = re.sub(r'^{0}://'.format(prefix), '', url)
@@ -28,7 +28,7 @@ def html_name(url: str) -> str:
     Returns:
         Generated name for html file.
     """
-    return '{0}.html'.format(get_name(url))
+    return '{0}.html'.format(site_name(url))
 
 
 def folder_name(url: str) -> str:
@@ -40,7 +40,7 @@ def folder_name(url: str) -> str:
     Returns:
         Generated name for downloads directory.
     """
-    return '{0}_files'.format(get_name(url))
+    return '{0}_files'.format(site_name(url))
 
 
 def locals_path(link: str, url: str) -> str:
@@ -59,4 +59,4 @@ def locals_path(link: str, url: str) -> str:
     if not file_ext:
         file_ext = '.html'
     body = re.sub(r'{0}$'.format(file_ext), '', link)
-    return '{0}/{1}{2}'.format(folder_name(url), get_name(body), file_ext)
+    return '{0}/{1}{2}'.format(folder_name(url), site_name(body), file_ext)
