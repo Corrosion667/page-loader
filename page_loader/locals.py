@@ -6,7 +6,8 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from page_loader.naming import locals_path
 
-IMG, LINK, SCRIPT, SOURCE, HYPERLINK = 'img', 'link', 'script', 'src', 'href'
+IMG, LINK, SCRIPT, = 'img', 'link', 'script'
+SOURCE, HYPERLINK = 'src', 'href'
 resource_tags_map = {
     IMG: SOURCE,
     LINK: HYPERLINK,
@@ -63,7 +64,6 @@ def get_and_replace_links(path_to_html: str, url: str) -> List[tuple]:  # noqa: 
         soup = BeautifulSoup(html_file, 'html.parser')
     urls = []
     for tag in resource_tags_map.keys():
-        # FIXME: findALl может сразу несколько тегов искать, может чуть код упростить
         for link in soup.findAll(tag):
             try:
                 ref = link[resource_tags_map[tag]]
