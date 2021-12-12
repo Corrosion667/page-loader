@@ -6,9 +6,12 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from page_loader.naming import locals_path
 
-RESOURCE_TAGS = ('img', 'link', 'script')
-SOURCE = 'src'
-HYPERLINK = 'href'
+IMG, LINK, SCRIPT, SOURCE, HYPERLINK = 'img', 'link', 'script', 'src', 'href'
+resource_tags_map = {
+    IMG: SOURCE,
+    LINK: HYPERLINK,
+    SCRIPT: SOURCE,
+}
 
 
 def is_local(src: str, url: str) -> bool:
@@ -44,7 +47,7 @@ def prepare_link(link: str, url: str) -> str:
     return link
 
 
-def get_and_replace_links(path_to_html: str, url: str) -> List[tuple]:  # noqa: C901, WPS231, E501
+def get_and_replace_links(path_to_html: str, url: str) -> List[tuple]:  # noqa: WPS231, E501
     """Replace links in downloaded html page from web links to local files.
 
     Get list of tuples: links with local resources and file paths for downloads.
@@ -59,24 +62,18 @@ def get_and_replace_links(path_to_html: str, url: str) -> List[tuple]:  # noqa: 
     with open(path_to_html) as html_file:
         soup = BeautifulSoup(html_file, 'html.parser')
     urls = []
-    for tag in RESOURCE_TAGS:
+    for tag in resource_tags_map.keys():
         # FIXME: findALl может сразу несколько тегов искать, может чуть код упростить
         for link in soup.findAll(tag):
             try:
-                # FIXME: если добавится еще один вид тегов со своими атрибутами, то сильно разрастется if этот
-                ref = link[HYPERLINK] if tag == 'link' else link[SOURCE]
+                ref = link[resource_tags_map[tag]]
             except KeyError:
                 continue
             if not is_local(ref, url):
                 continue
             path = locals_path(ref, url)
             urls.append((prepare_link(ref, url), path))
-
-            # FIXME: та же самая сложность с if, сейчас это работает, но если вдруг появится третий тег с другим атрибутом, то придется сильно переписывать уже
-            if tag != 'link':
-                link[SOURCE] = path
-                continue
-            link[HYPERLINK] = path
+            link[resource_tags_map[tag]] = path
     with open(path_to_html, 'w') as new_html:
         new_html.write(soup.prettify())
     return urls
