@@ -13,16 +13,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
-      - name: updating dpendencies and do linter and test check
+      - name: updating dpendencies and do linter check
         run: |
           pip install poetry
           make install
-          make check
+          make lint
       - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v2.7.5
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
-          # FIXME: 2 раза запускается тесты — здесь и на 6 строчк
-          # сейчас конечно не очень критично, потому что тесты быстро отрабатывают, но все равно лишнюю работу можно и не делать
           coverageCommand: make test-coverage
